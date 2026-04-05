@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MI CARRITO | DIAMOND HATS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        
+        :root { 
+            --azul-diamante: #00D2FF; 
+            --negro-puro: #000000; 
+        }
+
+        body { 
+            background-color: var(--negro-puro); 
+            color: var(--azul-diamante); 
+            font-family: 'Arial', sans-serif; 
+            cursor: default; 
+        }
+
+        .container-cart { 
+            max-width: 800px; 
+            margin-top: 50px; 
+            border: 1px solid var(--azul-diamante); 
+            border-radius: 20px; 
+            padding: 30px; 
+            background: rgba(255,255,255,0.05); 
+        }
+
+        .btn-azul { 
+            background-color: var(--azul-diamante); 
+            color: #000; 
+            font-weight: bold; 
+            border-radius: 25px; 
+            border: none; 
+            padding: 15px; 
+            transition: 0.3s; 
+            cursor: pointer;
+        }
+
+        .btn-azul:hover { 
+            transform: scale(1.05); 
+            background-color: #fff; 
+        }
+
+        .item-carrito { 
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2); 
+            padding: 15px 0; 
+        }
+
+        .desglose-envio {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            padding-top: 15px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container container-cart shadow-lg mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="fw-bold m-0">TU PEDIDO 🛒</h1>
+            <a href="index.html" class="btn btn-outline-info btn-sm">VOLVER A LA TIENDA</a>
+        </div>
+
+        <div id="lista-compra">
+            </div>
+
+        <div class="desglose-envio">
+            <div class="d-flex justify-content-between small mb-1">
+                <span>Subtotal:</span>
+                <span id="subtotal-precio">$ 0.00</span>
+            </div>
+            <div class="d-flex justify-content-between small mb-3">
+                <span>Envío:</span>
+                <span>$ 120.00</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="fw-bold m-0 text-info">TOTAL:</h3>
+                <h3 class="fw-bold m-0 text-info" id="total-final">$ 0.00</h3>
+            </div>
+        </div>
+
+        <button class="btn btn-azul w-100 mt-4 py-3" style="background: linear-gradient(45deg, #00D2FF, #0081FF) !important; color: white !important;" onclick="pagarConTarjeta()">
+            <i class="bi bi-credit-card-2-back me-2"></i> FINALIZAR COMPRA
+        </button>
+    </div>
+
+    <script>
+        const COSTO_ENVIO = 120; 
+        const TEL_WHATSAPP = "525555"; 
+
+        function cargarCarrito() {
+            const lista = document.getElementById('lista-compra');
+            const subtotalTxt = document.getElementById('subtotal-precio');
+            const totalTxt = document.getElementById('total-final');
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            
+            if (carrito.length === 0) {
+                lista.innerHTML = "<h4 class='text-center py-5'>Tu carrito está vacío.</h4>";
+                subtotalTxt.innerText = "$ 0.00";
+                totalTxt.innerText = "$ 0.00";
+                return;
+            }
+
+            lista.innerHTML = "";
+            let subtotal = 0;
+            
+            carrito.forEach((item, index) => {
+                subtotal += item.precio;
+                lista.innerHTML += `
+                    <div class="item-carrito d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <img src="${item.imagen}" width="60" class="rounded me-3" onerror="this.src='https://via.placeholder.com/60?text=HAT'">
+                            <div>
+                                <h5 class="mb-0 text-white">${item.nombre}</h5>
+                                <span class="text-info">$ ${item.precio.toLocaleString()}.00</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm" onclick="eliminar(${index})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>`;
+            });
+
+            const totalFinal = subtotal + COSTO_ENVIO;
+            subtotalTxt.innerText = "$ " + subtotal.toLocaleString() + ".00";
+            totalTxt.innerText = "$ " + totalFinal.toLocaleString() + ".00";
+        }
+
+        function eliminar(index) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            carrito.splice(index, 1);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            cargarCarrito();
+        }
+
+        function pagarConTarjeta() {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito.length === 0) return alert("Tu carrito está vacío.");
+
+            let subtotal = 0;
+            let resumenProductos = "";
+            carrito.forEach(item => {
+                subtotal += item.precio;
+                resumenProductos += `- ${item.nombre} ($${item.precio})\n`;
+            });
+            let totalFinal = subtotal + COSTO_ENVIO;
+
+            if (carrito.length === 1) {
+                
+                const linkFijo = carrito[0].linkPago;
+                if (linkFijo) {
+                    window.open(linkFijo, '_blank');
+                } else {
+                    alert("Configura el link de pago en el index para esta gorra.");
+                }
+            } else {
+                const mensaje = `💎 *NUEVO PEDIDO - DIAMOND HATS*\n\n` +
+                                `Hola, quiero finalizar mi pedido de varias gorras:\n\n` +
+                                `${resumenProductos}\n` +
+                                `*Subtotal:* $${subtotal.toLocaleString()}\n` +
+                                `*Envío:* $${COSTO_ENVIO}\n` +
+                                `*TOTAL A PAGAR: $${totalFinal.toLocaleString()}*\n\n` +
+                                `¿Me podrías mandar el link de pago para liquidar mi pedido?`;
+
+                const urlWA = `https://wa.me/${numero5255}?text=${encodeURIComponent(mensaje)}`;
+                window.open(urlWA, '_blank');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarCarrito);
+    </script>
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIAMOND HATS | Tienda Oficial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        
+        :root {
+            --azul-diamante: #00D2FF; 
+            --negro-puro: #000000;
+        }
+
+        body {
+            background-color: var(--negro-puro);
+            color: var(--azul-diamante);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-box {
+            border: 2px solid var(--azul-diamante);
+            border-radius: 30px;
+            background: rgba(0,210,255,0.05);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+        }
+        .login-input {
+            background: rgba(255,255,255,0.05) !important;
+            color: #fff !important;
+            border: 1px solid rgba(0, 210, 255, 0.3) !important;
+            border-radius: 50px !important;
+            padding: 12px 20px !important;
+            margin-bottom: 15px;
+        }
+        .login-input:focus {
+            border-color: var(--azul-diamante) !important;
+            box-shadow: 0 0 10px var(--azul-diamante) !important;
+        }
+
+        
+        .hero-section {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/hero.jpg'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0px 0px 20px var(--azul-diamante);
+        }
+
+        .btn-comprar-ahora {
+            background-color: var(--azul-diamante);
+            color: #000;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none !important;
+            transition: 0.3s;
+            margin-top: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 210, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .btn-comprar-ahora:hover {
+            transform: scale(1.1);
+            background-color: #fff;
+            box-shadow: 0px 0px 30px var(--azul-diamante);
+        }
+
+        @keyframes deslizarDiagonal {
+            from { opacity: 0; transform: translate(-100px, 50px); }
+            to { opacity: 1; transform: translate(0, 0); }
+        }
+
+        .animacion-diagonal {
+            animation: deslizarDiagonal 1.5s ease-out forwards;
+        }
+
+        .dropdown-menu {
+            background-color: var(--negro-puro);
+            border: 1px solid var(--azul-diamante);
+        }
+        .dropdown-item {
+            color: var(--azul-diamante);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .dropdown-item:hover {
+            background-color: var(--azul-diamante);
+            color: #000;
+        }
+        .dropdown-submenu { position: relative; }
+        .dropdown-submenu .dropdown-menu {
+            top: 0; left: 100%; margin-top: -1px; display: none;
+        }
+        .dropdown-submenu:hover > .dropdown-menu { display: block; }
+        .dropdown-toggle::after { display: none; }
+
+        h1, h4, h5, h6, .fw-bold, .precio, .card-title {
+            color: var(--azul-diamante) !important;
+            text-shadow: 0px 0px 5px rgba(0, 210, 255, 0.2);
+        }
+
+        .announcement-bar {
+            background-color: var(--negro-puro);
+            color: var(--azul-diamante);
+            border-bottom: 1px solid var(--azul-diamante);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        header {
+            background-color: var(--negro-puro) !important;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3) !important;
+        }
+
+        .bi-list, .bi-cart3, .bi-star { color: var(--azul-diamante) !important; cursor: pointer; }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(0, 210, 255, 0.2) !important;
+            transition: 0.3s ease-in-out;
+            border-radius: 20px !important;
+            opacity: 0; 
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--azul-diamante) !important;
+            box-shadow: 0px 0px 15px rgba(0, 210, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .btn-fav-card {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--azul-diamante);
+            color: var(--azul-diamante);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .btn-fav-card:hover {
+            background: var(--azul-diamante);
+            color: #000;
+        }
+
+        .card-img-top {
+            background-color: #111;
+            border-radius: 15px;
+            padding: 10px;
+            height: 200px;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .btn-azul {
+            background-color: var(--azul-diamante) !important;
+            color: #000 !important;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        
+        #diamond-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #050505;
+            border: 2px solid var(--azul-diamante);
+            border-radius: 15px;
+            padding: 15px;
+            z-index: 10001;
+            box-shadow: 0px 0px 20px rgba(0, 210, 255, 0.4);
+            transform: translateX(400px);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            visibility: hidden;
+        }
+
+        #diamond-notification.show {
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        .modal-confirm-content {
+            background: #000;
+            border: 2px solid var(--azul-diamante);
+            border-radius: 25px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        
+        .search-box-menu {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+        }
+        .search-input-menu {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid var(--azul-diamante) !important;
+            color: white !important;
+            border-radius: 20px !important;
+            font-size: 0.85rem;
+        }
+
+        
+        #modalConfirmarCompra {
+            z-index: 2000 !important;
+        }
+
+        
+        .btn-agotado {
+            background-color: #333 !important;
+            color: #777 !important;
+            cursor: not-allowed !important;
+            border: 1px solid #444 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box text-center p-5">
+            <img src="assets/logo.png" width="80" class="mb-3" onerror="this.src='https://via.placeholder.com/80?text=💎'">
+            <h2 id="login-title" class="fw-bold mb-4" style="letter-spacing: 3px; font-size: 1.5rem;">DIAMOND LOGIN</h2>
+            
+            <div id="login-form">
+                <div id="register-fields" style="display: none;">
+                    <input type="text" id="reg-name" class="form-control login-input" placeholder="Nombre completo">
+                </div>
+                <input type="email" id="user-email" class="form-control login-input" placeholder="Correo electrónico" required>
+                <input type="password" id="user-pass" class="form-control login-input" placeholder="Contraseña" required>
+                
+                <button id="btn-main" class="btn btn-azul w-100 py-2 mt-2 text-uppercase fw-bold" onclick="gestionarAcceso()">Iniciar Sesión</button>
+                
+                <p class="mt-3" style="font-size: 0.8rem; color: #666;">
+                    <span id="toggle-text">¿No tienes cuenta?</span> 
+                    <a href="javascript:void(0);" id="toggle-link" class="text-info text-decoration-none" onclick="toggleAuthMode()">Regístrate</a>
+                </p>
+            </div>
+            
+            <p class="mt-4 mb-0" style="font-size: 0.6rem; color: #444; letter-spacing: 1px;">DIAMOND HATS MÉXICO | OFFICIAL STORE</p>
+        </div>
+    </div>
+
+    <div id="diamond-notification">
+        <div class="d-flex align-items-center">
+            <div class="fs-2 me-3 text-info" id="notif-icon"><i class="bi bi-patch-check-fill"></i></div>
+            <div>
+                <h6 class="mb-0 fw-bold text-white" id="notif-title">¡ÉXITO!</h6>
+                <small id="notification-message" class="text-info" style="font-size: 0.75rem;"></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarCompra" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-confirm-content">
+                <div class="fs-1 text-info mb-3"><i class="bi bi-credit-card-2-back-fill"></i></div>
+                <h4 class="fw-bold text-white mb-3">¿CONTINUAR AL PAGO?</h4>
+                <p class="text-white-50 mb-4 small">Serás redirigido de forma segura para completar tu compra.</p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary w-100 rounded-pill" data-bs-dismiss="modal">CANCELAR</button>
+                    <button class="btn btn-azul w-100 rounded-pill" id="btn-confirmar-final">CONTINUAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero-section" id="hero-portada">
+        <h1 class="hero-title">DIAMOND HATS</h1>
+        <p class="text-white fs-5">ESTILO QUE BRILLA EN CADA DETALLE</p>
+        <a href="#productos" class="btn-comprar-ahora" onclick="quitarPortadaPermanente()">COMPRAR AHORA</a>
+    </section>
+
+    <div class="announcement-bar" id="productos">
+        <div class="marquee-content">
+            <span>🚚 ENVÍO POR $120 A TODO EL ESTADO DE MÉXICO — DIAMOND HATS — ESTILO QUE BRILLA 🚚</span>
+        </div>
+    </div>
+
+    <header class="header-container sticky-top py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-list fs-1"></i>
+                </a>
+                <ul class="dropdown-menu shadow-lg">
+                    <li class="search-box-menu">
+                        <input type="text" id="menu-search-input" class="form-control search-input-menu" placeholder="Buscar producto..." onkeyup="filtrarProductos()">
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0);">
+                            GORRAS <i class="bi bi-chevron-right ms-2" style="font-size: 0.7rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu shadow" id="submenu-lista-gorras"></ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0);">
+                            HOODIES <i class="bi bi-chevron-right ms-2" style="font-size: 0.7rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu shadow" id="submenu-lista-hoodies"></ul>
+                    </li>
+                    <li><a class="dropdown-item" href="cart.html">MI CARRITO</a></li>
+                    <li><hr class="dropdown-divider border-secondary"></li>
+                    <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="cerrarSesion()">CERRAR SESIÓN</a></li>
+                </ul>
+            </div>
+
+            <a href="index.html">
+                <img src="assets/logo.png" alt="Logo" style="height: 60px;" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
+            </a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <a href="fav.html" class="text-decoration-none position-relative">
+                    <i class="bi bi-star fs-3"></i>
+                    <span id="contador-favoritos" class="badge rounded-pill bg-info text-dark position-absolute top-0 start-100 translate-middle" style="font-size: 0.6rem;">0</span>
+                </a>
+                <a href="cart.html" class="text-decoration-none position-relative">
+                    <i class="bi bi-cart3 fs-3"></i>
+                    <span id="contador-carrito" class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle" style="font-size: 0.6rem;">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mt-5">
+        <h2 class="fw-bold mb-4 text-uppercase" id="title-gorras" style="letter-spacing: 2px;">diamond hats</h2>
+        <div id="contenedor-gorras" class="row gx-3 gy-4 mb-5">
+            <p class="text-center w-100" style="color: var(--azul-diamante);">Cargando catálogo de gorras...</p>
+        </div>
+
+        <hr id="divider-hoodies" style="border-color: rgba(0, 210, 255, 0.2); margin: 60px 0;">
+
+        <h2 class="fw-bold mb-4 text-uppercase" id="title-hoodies" style="letter-spacing: 2px;">diamond Hoodies</h2>
+        <div id="contenedor-hoodies" class="row gx-3 gy-4">
+            <p class="text-center w-100" style="color: var(--azul-diamante);">Cargando catálogo de hoodies...</p>
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalGorraGrande" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark border" style="border-color: var(--azul-diamante) !important; border-radius: 25px;">
+                <div class="modal-header border-0 p-0">
+                    <button type="button" class="btn-close btn-close-white ms-auto m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center mb-3 mb-md-0">
+                            <img src="" id="imagenGorraModal" class="img-fluid rounded shadow-lg" style="max-height: 60vh; object-fit: contain;">
+                        </div>
+                        <div class="col-md-6 text-center text-md-start px-md-4">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h2 id="tituloGorraModal" class="fw-bold text-uppercase mb-2" style="letter-spacing: 2px; color: var(--azul-diamante) !important;"></h2>
+                                <button class="btn btn-outline-info rounded-pill btn-sm" id="btn-modal-fav"><i class="bi bi-star"></i></button>
+                            </div>
+                            <h3 id="precioGorraModal" class="fw-bold text-white mb-4"></h3>
+                            
+                            <div class="d-grid gap-2 mb-4">
+                                <button id="btn-modal-agregar" class="btn btn-outline-info btn-lg py-3 text-uppercase">
+                                    <i class="bi bi-cart-plus me-2"></i> AÑADIR AL CARRITO
+                                </button>
+                                <button id="btn-modal-comprar" class="btn btn-azul btn-lg py-3 text-uppercase">
+                                    COMPRAR AHORA
+                                </button>
+                            </div>
+
+                            <p class="text-white-50 small mb-2 text-uppercase fw-bold" style="letter-spacing: 1px;">SÍGUENOS</p>
+                            <div class="d-flex justify-content-center justify-content-md-start">
+                                <a href="https://www.instagram.com/diamond__hatss_?igsh=YzE1Mno5N3g3YjJx" target="_blank" class="btn-social">
+                                    <i class="bi bi-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-5 mt-5 small">
+        <p style="color: rgba(0, 210, 255, 0.5);">© 2026 DIAMOND HATS | MÉXICO</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let isRegisterMode = false;
+        let idProductoAComprar = null; 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sesionActiva = localStorage.getItem('diamond_sesion');
+            if (sesionActiva) {
+                document.getElementById('login-screen').style.display = 'none';
+            }
+            renderizar();
+        });
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('login-title');
+            const btn = document.getElementById('btn-main');
+            const regFields = document.getElementById('register-fields');
+            if (isRegisterMode) {
+                title.innerText = "DIAMOND REGISTER";
+                btn.innerText = "Crear Cuenta";
+                regFields.style.display = "block";
+            } else {
+                title.innerText = "DIAMOND LOGIN";
+                btn.innerText = "Iniciar Sesión";
+                regFields.style.display = "none";
+            }
+        }
+
+        function gestionarAcceso() {
+            const email = document.getElementById('user-email').value.trim();
+            const pass = document.getElementById('user-pass').value.trim();
+            if (email === "" || pass === "") return alert("Por favor completa los campos.");
+            localStorage.setItem('diamond_sesion', email);
+            const login = document.getElementById('login-screen');
+            login.style.transition = "0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+            login.style.opacity = "0";
+            setTimeout(() => { login.style.display = 'none'; }, 600);
+        }
+
+        function cerrarSesion() {
+            if(confirm("¿Seguro que quieres cerrar sesión?")) {
+                localStorage.removeItem('diamond_sesion');
+                location.reload();
+            }
+        }
+
+        function quitarPortadaPermanente() {
+            const hero = document.getElementById('hero-portada');
+            if (hero) {
+                hero.remove(); 
+                sessionStorage.setItem('portadaEliminada', 'true');
+            }
+        }
+
+        if (sessionStorage.getItem('portadaEliminada')) {
+            document.getElementById('hero-portada')?.remove();
+        }
+
+        const productos = [
+            // GORRA
+            { id: 1, categoria: "gorra", nombre: "Dandy Hats project 001", precio: 1100, imagen: "assets/gorra1.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 },
+            { id: 2, categoria: "gorra", nombre: "Dandy Hats x Rude Awakenings", precio: 1100, imagen: "assets/gorra2.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 },
+            { id: 3, categoria: "gorra", nombre: "Gorra Cashed Out Hats Labubu", precio: 1000, imagen: "assets/gorra3.png", linkPago: "https://mpago.la/1F1Nidc", stock: 1 },
+            { id: 4, categoria: "gorra", nombre: "Dandy Hats x Canelo Álvarez", precio: 1150, imagen: "assets/gorra4.png", linkPago: "https://mpago.la/1FRuXTS", stock: 1 },
+            { id: 5, categoria: "gorra", nombre: "Dandy Hats Triple D", precio: 1100, imagen: "assets/gorra5.png", linkPago: "https://mpago.la/1kYGhbM", stock: 11 },
+            { id: 6, categoria: "gorra", nombre: "Baéz x Maestro Shifu Abz", precio: 900, imagen: "assets/gorra6.png", linkPago: "https://mpago.la/14oEn8v", stock: 1 }, 
+            { id: 7, categoria: "gorra", nombre: "Barbas Hats B Cross", precio: 800, imagen: "assets/gorra7.png", linkPago: "https://mpago.la/2jG3wg2", stock: 1 },
+            { id: 8, categoria: "gorra", nombre: "Dandy Hats Sad Boyz", precio: 1100, imagen: "assets/gorra8.png", linkPago: "https://mpago.la/1kYGhbM", stock: 11 },
+            // HOODIE
+            { id: 9, categoria: "hoodie", nombre: "Essentials", precio: 1100, imagen: "assets/hoodie1.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 }
+        ];
+
+        function renderizar(filtro = "") {
+            const contenedorGorras = document.getElementById('contenedor-gorras');
+            const contenedorHoodies = document.getElementById('contenedor-hoodies');
+            const submenuGorras = document.getElementById('submenu-lista-gorras');
+            const submenuHoodies = document.getElementById('submenu-lista-hoodies');
+            
+            contenedorGorras.innerHTML = "";
+            contenedorHoodies.innerHTML = "";
+            submenuGorras.innerHTML = "";
+            submenuHoodies.innerHTML = "";
+
+            let countGorras = 0;
+            let countHoodies = 0;
+
+            productos.forEach(p => {
+                if (filtro !== "" && !p.nombre.toLowerCase().includes(filtro.toLowerCase())) return;
+
+                
+                const isAgotado = p.stock <= 0;
+                const btnAgregar = isAgotado ? 'disabled' : `onclick="agregarAlCarrito(${p.id})"`;
+                const btnComprar = isAgotado ? 'disabled' : `onclick="comprarAhora(${p.id})"`;
+                const claseBoton = isAgotado ? 'btn-agotado' : '';
+                const textoBoton = isAgotado ? 'AGOTADO' : 'COMPRAR YA';
+
+                const cardHTML = `
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100 text-center animacion-diagonal">
+                            <button class="btn-fav-card" onclick="toggleFavorito(${p.id})">
+                                <i class="bi bi-star" id="fav-icon-${p.id}"></i>
+                            </button>
+                            <img src="${p.imagen}" class="card-img-top cursor-pointer" onclick="abrirZoom(${p.id})" onerror="this.src='https://via.placeholder.com/400x400?text=DIAMOND'">
+                            <div class="card-body px-1">
+                                <h6 class="fw-bold mb-1" style="font-size: 0.8rem; text-transform: uppercase;">${p.nombre}</h6>
+                                <p class="fw-bold mb-2">$ ${p.precio.toLocaleString()}.00</p>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-info btn-sm ${isAgotado ? 'd-none' : ''}" ${btnAgregar}>
+                                        <i class="bi bi-cart-plus"></i> AÑADIR
+                                    </button>
+                                    <button class="btn btn-azul btn-sm ${claseBoton}" ${btnComprar}>
+                                        ${textoBoton}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                if (p.categoria === "gorra") {
+                    contenedorGorras.innerHTML += cardHTML;
+                    submenuGorras.innerHTML += `<li><a class="dropdown-item" href="javascript:void(0);" onclick="abrirZoom(${p.id})">${p.nombre}</a></li>`;
+                    countGorras++;
+                } else if (p.categoria === "hoodie") {
+                    contenedorHoodies.innerHTML += cardHTML;
+                    submenuHoodies.innerHTML += `<li><a class="dropdown-item" href="javascript:void(0);" onclick="abrirZoom(${p.id})">${p.nombre}</a></li>`;
+                    countHoodies++;
+                }
+            });
+
+            document.getElementById('title-gorras').style.display = countGorras > 0 ? "block" : "none";
+            document.getElementById('title-hoodies').style.display = countHoodies > 0 ? "block" : "none";
+            document.getElementById('divider-hoodies').style.display = (countGorras > 0 && countHoodies > 0) ? "block" : "none";
+            
+            actualizarBadge();
+            actualizarFavoritosBadge();
+        }
+
+        function filtrarProductos() {
+            const query = document.getElementById('menu-search-input').value;
+            renderizar(query);
+        }
+
+        function abrirZoom(idProducto) {
+            const producto = productos.find(p => p.id === idProducto);
+            if(!producto) return;
+            
+            const isAgotado = producto.stock <= 0;
+            
+            document.getElementById('imagenGorraModal').src = producto.imagen;
+            document.getElementById('tituloGorraModal').innerText = producto.nombre;
+            document.getElementById('precioGorraModal').innerText = "$ " + producto.precio.toLocaleString() + ".00";
+            
+            const btnAgregar = document.getElementById('btn-modal-agregar');
+            const btnComprar = document.getElementById('btn-modal-comprar');
+
+            if(isAgotado) {
+                btnAgregar.classList.add('d-none');
+                btnComprar.innerText = "AGOTADO";
+                btnComprar.classList.add('btn-agotado');
+                btnComprar.disabled = true;
+            } else {
+                btnAgregar.classList.remove('d-none');
+                btnAgregar.onclick = () => agregarAlCarrito(producto.id);
+                btnComprar.innerText = "COMPRAR AHORA";
+                btnComprar.classList.remove('btn-agotado');
+                btnComprar.disabled = false;
+                btnComprar.onclick = () => comprarAhora(producto.id);
+            }
+
+            document.getElementById('btn-modal-fav').onclick = () => toggleFavorito(producto.id);
+            new bootstrap.Modal(document.getElementById('modalGorraGrande')).show();
+        }
+
+        function toggleFavorito(id) {
+            let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+            const index = favoritos.findIndex(p => p.id === id);
+            const notif = document.getElementById('diamond-notification');
+            if (index === -1) {
+                favoritos.push(productos.find(p => p.id === id));
+                document.getElementById('notif-title').innerText = "¡ÉXITO!";
+                document.getElementById('notification-message').innerText = "se añadió con éxito a destacados";
+                document.getElementById('notif-icon').innerHTML = '<i class="bi bi-star-fill"></i>';
+            } else {
+                favoritos.splice(index, 1);
+                document.getElementById('notif-title').innerText = "¡REMOVIDO!";
+                document.getElementById('notif-icon').innerHTML = '<i class="bi bi-star"></i>';
+            }
+            localStorage.setItem('favoritos', JSON.stringify(favoritos));
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 3000);
+            actualizarFavoritosBadge();
+        }
+
+        function agregarAlCarrito(id) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const pEncontrado = productos.find(p => p.id === id);
+            if(pEncontrado && pEncontrado.stock > 0){
+                carrito.push(pEncontrado);
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                actualizarBadge();
+                const notification = document.getElementById('diamond-notification');
+                document.getElementById('notif-title').innerText = "¡ÉXITO!";
+                document.getElementById('notification-message').innerText = "se añadió con éxito al carrito";
+                document.getElementById('notif-icon').innerHTML = '<i class="bi bi-patch-check-fill"></i>';
+                notification.classList.add('show');
+                setTimeout(() => notification.classList.remove('show'), 3000);
+            }
+        }
+
+        function comprarAhora(id) {
+            idProductoAComprar = id;
+            const modalPago = new bootstrap.Modal(document.getElementById('modalConfirmarCompra'));
+            modalPago.show();
+        }
+
+        document.getElementById('btn-confirmar-final').onclick = function() {
+            if(idProductoAComprar) {
+                const producto = productos.find(p => p.id === idProductoAComprar);
+                if (producto && producto.linkPago) {
+                    window.open(producto.linkPago, '_blank');
+                }
+            }
+        };
+
+        function actualizarBadge() {
+            const badge = document.getElementById('contador-carrito');
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if(badge) badge.innerText = carrito.length;
+        }
+
+        function actualizarFavoritosBadge() {
+            const badge = document.getElementById('contador-favoritos');
+            let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+            if(badge) badge.innerText = favoritos.length;
+        }
+    </script>
+</body>
+</html>
