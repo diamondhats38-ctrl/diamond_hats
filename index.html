@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        
         :root {
             --azul-diamante: #00D2FF; 
             --negro-puro: #000000;
@@ -21,7 +20,6 @@
             cursor: default;
         }
 
-        
         #login-screen {
             position: fixed;
             top: 0;
@@ -33,29 +31,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-y: auto; 
         }
         .login-box {
             border: 2px solid var(--azul-diamante);
             border-radius: 30px;
             background: rgba(0,210,255,0.05);
-            max-width: 400px;
-            width: 90%;
+            max-width: 450px; 
+            width: 95%;
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            margin: 20px;
         }
         .login-input {
             background: rgba(255,255,255,0.05) !important;
             color: #fff !important;
             border: 1px solid rgba(0, 210, 255, 0.3) !important;
             border-radius: 50px !important;
-            padding: 12px 20px !important;
-            margin-bottom: 15px;
+            padding: 10px 20px !important;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
         }
         .login-input:focus {
             border-color: var(--azul-diamante) !important;
             box-shadow: 0 0 10px var(--azul-diamante) !important;
         }
 
-        
         .hero-section {
             height: 100vh;
             width: 100%;
@@ -220,7 +220,6 @@
             cursor: pointer;
         }
 
-        
         #diamond-notification {
             position: fixed;
             top: 20px;
@@ -250,7 +249,6 @@
             padding: 30px;
         }
 
-        
         .search-box-menu {
             padding: 10px 15px;
             border-bottom: 1px solid rgba(0, 210, 255, 0.2);
@@ -263,12 +261,10 @@
             font-size: 0.85rem;
         }
 
-        
         #modalConfirmarCompra {
             z-index: 2000 !important;
         }
 
-        
         .btn-agotado {
             background-color: #333 !important;
             color: #777 !important;
@@ -287,7 +283,22 @@
             <div id="login-form">
                 <div id="register-fields" style="display: none;">
                     <input type="text" id="reg-name" class="form-control login-input" placeholder="Nombre completo">
+                    <input type="tel" id="reg-whatsapp" class="form-control login-input" placeholder="WhatsApp (10 dígitos)">
+                    
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="text" id="reg-cp" class="form-control login-input" placeholder="Código Postal">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" id="reg-estado" class="form-control login-input" placeholder="Estado">
+                        </div>
+                    </div>
+                    <input type="text" id="reg-municipio" class="form-control login-input" placeholder="Municipio / Alcaldía">
+                    <input type="text" id="reg-calle" class="form-control login-input" placeholder="Calle y Número (Exterior/Interior)">
+                    <input type="text" id="reg-colonia" class="form-control login-input" placeholder="Colonia">
+                    <input type="text" id="reg-referencia" class="form-control login-input" placeholder="Referencias de la casa">
                 </div>
+
                 <input type="email" id="user-email" class="form-control login-input" placeholder="Correo electrónico" required>
                 <input type="password" id="user-pass" class="form-control login-input" placeholder="Contraseña" required>
                 
@@ -444,6 +455,32 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDk85LtAf6s1BDFOPohgTzL_5WYHXlbmII",
+            authDomain: "diamond-hats-7d1b5.firebaseapp.com",
+            projectId: "diamond-hats-7d1b5",
+            storageBucket: "diamond-hats-7d1b5.firebasestorage.app",
+            messagingSenderId: "130555213020",
+            appId: "1:130555213020:web:97be64ed98949d95413019",
+            measurementId: "G-6Y27XM5JTG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.setDoc = setDoc;
+        window.doc = doc;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+
     <script>
         let isRegisterMode = false;
         let idProductoAComprar = null; 
@@ -462,7 +499,7 @@
             const btn = document.getElementById('btn-main');
             const regFields = document.getElementById('register-fields');
             if (isRegisterMode) {
-                title.innerText = "DIAMOND REGISTER";
+                title.innerText = "DIAMOND REGISTRO";
                 btn.innerText = "Crear Cuenta";
                 regFields.style.display = "block";
             } else {
@@ -472,10 +509,43 @@
             }
         }
 
-        function gestionarAcceso() {
+        async function gestionarAcceso() {
             const email = document.getElementById('user-email').value.trim();
             const pass = document.getElementById('user-pass').value.trim();
             if (email === "" || pass === "") return alert("Por favor completa los campos.");
+
+            if (isRegisterMode) {
+                const nombre = document.getElementById('reg-name').value.trim();
+                const whatsapp = document.getElementById('reg-whatsapp').value.trim();
+                const cp = document.getElementById('reg-cp').value.trim();
+                const estado = document.getElementById('reg-estado').value.trim();
+                const municipio = document.getElementById('reg-municipio').value.trim();
+                const calle = document.getElementById('reg-calle').value.trim();
+                const colonia = document.getElementById('reg-colonia').value.trim();
+                const referencia = document.getElementById('reg-referencia').value.trim();
+
+                if(!nombre || !whatsapp || !cp || !calle) return alert("Por favor, llena los datos de envío obligatorios (Nombre, WhatsApp, CP y Calle).");
+
+                try {
+                    await window.setDoc(window.doc(window.db, "clientes", email), {
+                        nombre: nombre,
+                        whatsapp: whatsapp,
+                        direccion: {
+                            cp: cp,
+                            estado: estado,
+                            municipio: municipio,
+                            calle: calle,
+                            colonia: colonia,
+                            referencia: referencia
+                        },
+                        email: email,
+                        fecha: window.serverTimestamp()
+                    });
+                } catch (e) {
+                    console.error("Error al guardar cliente: ", e);
+                }
+            }
+
             localStorage.setItem('diamond_sesion', email);
             const login = document.getElementById('login-screen');
             login.style.transition = "0.6s cubic-bezier(0.4, 0, 0.2, 1)";
@@ -503,7 +573,6 @@
         }
 
         const productos = [
-            // GORRA
             { id: 1, categoria: "gorra", nombre: "Dandy Hats project 001", precio: 1100, imagen: "assets/gorra1.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 },
             { id: 2, categoria: "gorra", nombre: "Dandy Hats x Rude Awakenings", precio: 1100, imagen: "assets/gorra2.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 },
             { id: 3, categoria: "gorra", nombre: "Gorra Cashed Out Hats Labubu", precio: 1000, imagen: "assets/gorra3.png", linkPago: "https://mpago.la/1F1Nidc", stock: 1 },
@@ -512,8 +581,7 @@
             { id: 6, categoria: "gorra", nombre: "Baéz x Maestro Shifu Abz", precio: 900, imagen: "assets/gorra6.png", linkPago: "https://mpago.la/14oEn8v", stock: 1 }, 
             { id: 7, categoria: "gorra", nombre: "Barbas Hats B Cross", precio: 800, imagen: "assets/gorra7.png", linkPago: "https://mpago.la/2jG3wg2", stock: 1 },
             { id: 8, categoria: "gorra", nombre: "Dandy Hats Sad Boyz", precio: 1100, imagen: "assets/gorra8.png", linkPago: "https://mpago.la/1kYGhbM", stock: 11 },
-            // HOODIE
-            { id: 9, categoria: "hoodie", nombre: "Essentials", precio: 1100, imagen: "assets/hoodie1.png", linkPago: "https://mpago.la/1kYGhbM", stock: 0 }
+            { id: 9, categoria: "hoodie", nombre: "Essentials", precio: 1100, imagen: "assets/hoodie1.png", linkPago: "https://mpago.la/1kYGhbM", stock: 1 }
         ];
 
         function renderizar(filtro = "") {
@@ -533,7 +601,6 @@
             productos.forEach(p => {
                 if (filtro !== "" && !p.nombre.toLowerCase().includes(filtro.toLowerCase())) return;
 
-                
                 const isAgotado = p.stock <= 0;
                 const btnAgregar = isAgotado ? 'disabled' : `onclick="agregarAlCarrito(${p.id})"`;
                 const btnComprar = isAgotado ? 'disabled' : `onclick="comprarAhora(${p.id})"`;
@@ -660,12 +727,25 @@
             modalPago.show();
         }
 
-        document.getElementById('btn-confirmar-final').onclick = function() {
+        document.getElementById('btn-confirmar-final').onclick = async function() {
             if(idProductoAComprar) {
                 const producto = productos.find(p => p.id === idProductoAComprar);
-                if (producto && producto.linkPago) {
-                    window.open(producto.linkPago, '_blank');
-                }
+                const userEmail = localStorage.getItem('diamond_sesion');
+
+                try {
+                    await window.addDoc(window.collection(window.db, "ventas"), {
+                        cliente: userEmail,
+                        producto: producto.nombre,
+                        precio: producto.precio,
+                        fecha: window.serverTimestamp()
+                    });
+                } catch(e) { console.log(e); }
+
+                const tuWhatsApp = "525500000000"; // PON TU NÚMERO AQUÍ
+                const msg = `💎 *NUEVA ORDEN DIAMOND*%0A*Cliente:* ${userEmail}%0A*Gorra:* ${producto.nombre}%0A*Precio:* $${producto.precio}`;
+                
+                window.open(producto.linkPago, '_blank');
+                window.open(`https://wa.me/${tuWhatsApp}?text=${msg}`, '_blank');
             }
         };
 
@@ -679,6 +759,11 @@
             const badge = document.getElementById('contador-favoritos');
             let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
             if(badge) badge.innerText = favoritos.length;
+        }
+
+        function filtrarProductos() {
+            const query = document.getElementById('menu-search-input').value;
+            renderizar(query);
         }
     </script>
 </body>
